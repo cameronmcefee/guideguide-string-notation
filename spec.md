@@ -1,0 +1,156 @@
+# GuideGuide String Notation
+
+## Grid
+
+*|\<hunks\>|\<options\>\<grid width\>*
+
+A grid is a collection of cells (hunks) across a single dimentional plane. The format for a grid is bases loosely on that of regular expressions. A grid is a collection of hunk objects bookended by pipe `|` characters. It is possible to change the way GuideGuide renders the grid by specifiying options after the right most pipe character. A width for the grid can be specified as a single unit object to the right of the options. White space is ignored. Newlines are used to define multiple grids.
+
+
+#### examples
+
+- `|$*3|`  
+  a three column grid
+
+- `|<10px 20px*3 >10px|HC100px`  
+  a one hundred pixel horizontal grid with a ten pixel left margin, ten pixel right margin, and three twenty pixel columns centered in the middle
+
+- `|10px 200px 10px $*5|`  
+  a grid with a left side bar with 10px on either side, and a five columns filling the gap.
+
+-  ```
+  |$*3|H100px
+  |$*3|V100px
+  ```
+  A one hundred pixel wide grid with three columns. A one hundred pixel heigh grid with three columns.
+
+
+## Unit objects
+
+*\<value\>\<unit\>*
+
+Unit objects are value-unit pairs that indicate a measurement within guideguide.
+
+#### Examples
+
+- `72px`
+- `1in`
+- `2.54cm`
+- `25.4mm`
+- `72pts`
+- `6pica`
+- `100%`
+
+## Hunks
+
+Hunks represent objects that define a cell or group of cells within a grid.
+
+### Arbitrary hunks
+
+*\<value\>\<unit\>\*\<multiplier\>*
+
+Arbitrary hunks are simple grid cells that are the width of the unit specified.
+
+### Margins
+
+*\<side\>\<value\>\<unit\>\*\<multiplier\>*
+
+Margins are hunks that attach to the specified side of the grid area. While it's possible to delcare margins anywhere in the grid declaration, it's less confusing if they are declared on the side of the declaration that they represent.
+
+*values*:
+
+- `<`  
+  first margin (left/top)
+
+- `>`  
+  last margin (right/bottom)
+
+Margins are grid cells that 
+
+#### Examples
+
+- `|<10px >10px|`  
+  ten pixel left margin, ten pixel right margin
+  
+- `|<10px*2 >10px >10px|`
+  two ten pixel left margins, two ten pixel right margins
+
+### Wildcards
+
+*$\<id\>(\<hunks\>)\<\*multiplier\>*
+
+A wildcard is a way to define variables within a grid. When specified in its simplest form `$` the value remaing after all defined grid hunks have been applied to the grid area will be distributed evenly between the wildcards. If the grid is rendered as pixel specific, the value will be spread evently across the wildcards, with the remaining pixels being distributed amongst the grid based on GuideGuide's pixel remainder settings.
+
+#### Examples
+
+- `| $ $ $ |`  
+  a three column grid
+
+- `| $*3 |`  
+  a three column grid
+
+- `|$10px*3|`  
+  three columns that are 10 pixels wide
+
+In cases where a user would like to define a repeating collection of hunks, a wildcard combined with an id and parens can be used. The wildcard's hunks should be deinfed in the first instance of the hunk
+
+#### Examples
+
+- `|$ $G(20px) $ $G $|`  
+  three colums with twenty pixel gutters
+  
+- `|$B(10px $ 10px) 20px $B 20px $B|`  
+  three columns, ten pixel column padding, and twenty pixel gutters 
+
+### Grid Options
+
+Optional values to modify how the grid is created. 
+
+#### Orientation
+
+Determines the direction the grid will be rendered, whether on the x or the y plain.
+
+*values*:
+
+- `H` *(default)*  
+  horizontal
+
+- `V`  
+  vertical
+
+#### Position
+
+Determines the position where GuideGuide renders the grid in cases where the grid specified does not fill the available area. GuideGuide factors this available area as the remainder of *area - margins*.
+
+*values:*
+
+- `F`*(default)*  
+  first
+
+- `C`  
+  center
+
+- `L`  
+  last
+
+#### Calculation
+
+Determines whether GuideGuide is strict about integers when calculating pixels
+
+*values:*
+
+- `N` *(default)*  
+  normal
+
+- `P`  
+  pixel specific
+
+#### Grid width
+
+A unit object that can specify the width of the grid area to be used for the calculation.
+Must be a positive value.
+
+**Examples**
+
+- `| $*3 |100px`  
+  A three column grid that is one hundred pixels wide.
