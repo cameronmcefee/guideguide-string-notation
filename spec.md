@@ -1,13 +1,24 @@
 # GuideGuide String Notation
 
+```
+|<10px $*3 >10px|H100px
+|<10px $*3 >10px|V100px
+```
+
+GuideGuide is awesome, but due to the fact that its values come from static inputs, users are provided a limited number of options as to how they can create grids. With the GuideGuide form it is not possible to create grids with arbitrary such as sidebars.
+
+This spec defines a written language called GuideGuide String Notation (GGSN) that can be used to "write" custom grids. GuideGuide itself will run using GGSN. The GuideGuide form will simply be a frontend that outputs GGSN to be parsed by the underlying logic.
+
+Users that only want the basic GuideGuide features will likely never know GGSN exists. Power users will be able to vertically expand the GuideGuide window revealing a text field that will show the output GGSN from the form above. If the user would like to create their own custom grid, they can do so by editing the GGSN in the field.
+
 ## Grid
 
-*|\<hunks\>|\<options\>\<grid width\>*
+> |\<hunks\>|\<options\>\<grid width\>
 
-A grid is a collection of cells (hunks) across a single dimentional plane. The format for a grid is bases loosely on that of regular expressions. A grid is a collection of hunk objects bookended by pipe `|` characters. It is possible to change the way GuideGuide renders the grid by specifiying options after the right most pipe character. A width for the grid can be specified as a single unit object to the right of the options. White space is ignored. Newlines are used to define multiple grids.
+A grid is a collection of cells (hunks) across a single dimentional plane. The format for a grid is bases loosely on that of regular expressions. A grid is a collection of hunk objects bookended by pipe `|` characters. It is possible to change the way GuideGuide renders the grid by specifiying options after the right most pipe character. A width for the grid can be specified as a single unit object to the right of the options. White space is ignored. Newlines are used to define multiple grids in one string.
 
 
-#### examples
+#### Examples
 
 - `|$*3|`  
   a three column grid
@@ -18,18 +29,13 @@ A grid is a collection of cells (hunks) across a single dimentional plane. The f
 - `|10px 200px 10px $*5|`  
   a grid with a left side bar with 10px on either side, and a five columns filling the gap.
 
--  ```
-  |$*3|H100px
-  |$*3|V100px
-  ```
-  A one hundred pixel wide grid with three columns. A one hundred pixel heigh grid with three columns.
 
 
 ## Unit objects
 
-*\<value\>\<unit\>*
+> \<value\>\<unit\>
 
-Unit objects are value-unit pairs that indicate a measurement within guideguide.
+Unit objects are value-unit pairs that indicate a measurement.
 
 #### Examples
 
@@ -43,21 +49,29 @@ Unit objects are value-unit pairs that indicate a measurement within guideguide.
 
 ## Hunks
 
-Hunks represent objects that define a cell or group of cells within a grid.
+Hunks represent objects that define a cell or group of cells. An optional multiplier can be added to the end of the hunk to indicate that the hunk should be repated.
 
 ### Arbitrary hunks
 
-*\<value\>\<unit\>\*\<multiplier\>*
+> \<value\>\<unit\>*\<multiplier\>
 
-Arbitrary hunks are simple grid cells that are the width of the unit specified.
+Arbitrary hunks are simple grid cells that are the width of the unit specified. Arbitrary hunks must have a positive value.
+
+#### Examples
+
+- `|10px*3|`  
+  three ten pixel columns
+
+- `|.5in 1in .5in|`  
+  one half inch column, one inch column, one half inch column
 
 ### Margins
 
-*\<side\>\<value\>\<unit\>\*\<multiplier\>*
+> \<side\>\<value\>\<unit\>*\<multiplier\>
 
-Margins are hunks that attach to the specified side of the grid area. While it's possible to delcare margins anywhere in the grid declaration, it's less confusing if they are declared on the side of the declaration that they represent.
+Margins are hunks that attach to the specified side of the grid area. While it's possible to delcare margins anywhere in the grid declaration, it's less confusing if they are declared on the side of the declaration that they represent. Margins are additive from the edge of the grid inward. For example a value such as `<10px <-10px` would result in only a ten pixel margin, as the second margin returns to 0. Negative values can be used to place the margins outside the grid area.
 
-*values*:
+#### Values:
 
 - `<`  
   first margin (left/top)
@@ -65,21 +79,19 @@ Margins are hunks that attach to the specified side of the grid area. While it's
 - `>`  
   last margin (right/bottom)
 
-Margins are grid cells that 
-
 #### Examples
 
 - `|<10px >10px|`  
   ten pixel left margin, ten pixel right margin
   
-- `|<10px*2 >10px >10px|`
+- `|<10px*2 >10px >10px|`  
   two ten pixel left margins, two ten pixel right margins
 
 ### Wildcards
 
-*$\<id\>(\<hunks\>)\<\*multiplier\>*
+> $\<id\>(\<hunks\>)\*\<multiplier\>
 
-A wildcard is a way to define variables within a grid. When specified in its simplest form `$` the value remaing after all defined grid hunks have been applied to the grid area will be distributed evenly between the wildcards. If the grid is rendered as pixel specific, the value will be spread evently across the wildcards, with the remaining pixels being distributed amongst the grid based on GuideGuide's pixel remainder settings.
+A wildcard is a way to define variables within a grid. When specified in its simplest form `$` the value remaing after all defined grid hunks have been applied to the grid area will be distributed evenly between the wildcards. If the grid is rendered as pixel specific, the value will be spread evently across the wildcards, with the remaining pixels being distributed amongst the grid based on GuideGuide's pixel remainder settings. Values must be positive.
 
 #### Examples
 
@@ -92,9 +104,14 @@ A wildcard is a way to define variables within a grid. When specified in its sim
 - `|$10px*3|`  
   three columns that are 10 pixels wide
 
-In cases where a user would like to define a repeating collection of hunks, a wildcard combined with an id and parens can be used. The wildcard's hunks should be deinfed in the first instance of the hunk
+In cases where a user would like to define a repeating collection of hunks, a wildcard combined with an id and parens can be used. The wildcard's hunks should be declared in the first instance of the hunk. In cases where only a single wildcard of an id is declared, GuideGuide will attempt to repeat the wildcard as many consecutive times as will fit in the given area, after all other calculations are made.
+
+*Note:* I haven't yet figured out how to handle cases of multiple wildcard ids. This portion is still in flux.
 
 #### Examples
+
+- `|$(100px)|`  
+  as many one hundred pixel columns as will fit
 
 - `|$ $G(20px) $ $G $|`  
   three colums with twenty pixel gutters
@@ -102,15 +119,15 @@ In cases where a user would like to define a repeating collection of hunks, a wi
 - `|$B(10px $ 10px) 20px $B 20px $B|`  
   three columns, ten pixel column padding, and twenty pixel gutters 
 
-### Grid Options
+## Grid Options
 
 Optional values to modify how the grid is created. 
 
-#### Orientation
+### Orientation
 
-Determines the direction the grid will be rendered, whether on the x or the y plain.
+Determines the direction the grid will be rendered, whether horizontal or vertical.
 
-*values*:
+#### Values:
 
 - `H` *(default)*  
   horizontal
@@ -118,11 +135,11 @@ Determines the direction the grid will be rendered, whether on the x or the y pl
 - `V`  
   vertical
 
-#### Position
+### Position
 
 Determines the position where GuideGuide renders the grid in cases where the grid specified does not fill the available area. GuideGuide factors this available area as the remainder of *area - margins*.
 
-*values:*
+#### Values:
 
 - `F`*(default)*  
   first
@@ -133,11 +150,11 @@ Determines the position where GuideGuide renders the grid in cases where the gri
 - `L`  
   last
 
-#### Calculation
+### Calculation
 
 Determines whether GuideGuide is strict about integers when calculating pixels
 
-*values:*
+#### Values:
 
 - `N` *(default)*  
   normal
@@ -145,12 +162,12 @@ Determines whether GuideGuide is strict about integers when calculating pixels
 - `P`  
   pixel specific
 
-#### Grid width
+### Grid width
 
 A unit object that can specify the width of the grid area to be used for the calculation.
 Must be a positive value.
 
-**Examples**
+#### Examples:
 
 - `| $*3 |100px`  
   A three column grid that is one hundred pixels wide.
