@@ -89,7 +89,7 @@ Margins are hunks that attach to the specified side of the grid area. While it's
 
 ### Wildcards
 
-> $\<id\>(\<hunks\>)\*\<multiplier\>
+> $\<id\>{\<hunks\>}\*\<multiplier\>
 
 A wildcard is a way to define variables within a grid. When specified in its simplest form `$` the value remaing after all defined grid hunks have been applied to the grid area will be distributed evenly between the wildcards. If the grid is rendered as pixel specific, the value will be spread evently across the wildcards, with the remaining pixels being distributed amongst the grid based on GuideGuide's pixel remainder settings. Values must be positive.
 
