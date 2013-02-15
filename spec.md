@@ -101,9 +101,6 @@ A wildcard is a way to define variables within a grid. When specified in its sim
 - `| $*3 |`  
   a three column grid
 
-- `|$10px*3|`  
-  three columns that are 10 pixels wide
-
 In cases where a user would like to define a repeating collection of hunks, a wildcard combined with an id and curly brackets can be used. The wildcard's hunks should be declared in the first instance of the hunk. In cases where only a single wildcard of an id is declared, GuideGuide will attempt to repeat the wildcard as many consecutive times as will fit in the given area, after all other calculations are made.
 
 *Note:* I haven't yet figured out how to handle cases of multiple wildcard ids. This portion is still in flux.
@@ -112,6 +109,9 @@ In cases where a user would like to define a repeating collection of hunks, a wi
 
 - `|${100px}|`  
   as many one hundred pixel columns as will fit
+
+- `|${10px}*3|`  
+  three columns that are 10 pixels wide
 
 - `|$ $G{20px} $ $G $|`  
   three colums with twenty pixel gutters
