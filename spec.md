@@ -15,7 +15,7 @@ Users that only want the basic GuideGuide features will likely never know GGSN e
 
 > |\<hunks\>|\<options\>\<grid width\>
 
-A grid is a collection of cells (hunks) across a single dimentional plane. The format for a grid is bases loosely on that of regular expressions. A grid is a collection of hunk objects bookended by pipe `|` characters. It is possible to change the way GuideGuide renders the grid by specifiying options after the right most pipe character. A width for the grid can be specified as a single unit object to the right of the options. White space is ignored. Newlines are used to define multiple grids in one string.
+A grid is a collection of cells (hunks) across a single dimentional plane. The format for a grid is bases loosely on that of regular expressions. A grid is a collection of hunk objects bookended by pipe `|` characters. It is possible to change the way GuideGuide renders the grid by specifiying options after the right most pipe character. A width for the grid can be specified as a single unit object to the right of the options. Each hunk declaration is separated by a space. Newlines are used to define multiple grids in one string.
 
 
 #### Examples
