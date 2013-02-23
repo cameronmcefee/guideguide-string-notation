@@ -180,7 +180,7 @@ GuideGuide String Notation errors will be denoted in brackets. Directly followin
 ### Hunk errors
 
 ```
-|10px [10foo](1) 10px|
+|10px [10foo(1)] 10px|
 
 (1) Unrecognzed unit type
 ```
@@ -188,14 +188,14 @@ GuideGuide String Notation errors will be denoted in brackets. Directly followin
 ### Param errors
 
 ```
-|$*3|N[E](1)
+|$*3|N[E(1)]
 
 (1) Unrecognized option
 ```
 
 ### Grid Errors
 ```
-[|$*3NL10px](1)
+[|$*3NL10px(1)]
 
 (Improperly formatted grid)
 ```
