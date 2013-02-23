@@ -171,3 +171,31 @@ Must be a positive value.
 
 - `| $*3 |100px`  
   A three column grid that is one hundred pixels wide.
+
+## Errors
+
+GuideGuide String Notation errors will be denoted in brackets. Directly following a bracketed error will be a set of parens containing a comma separated list of error IDs. Explanation of the errors will be printed below the grid.
+
+
+### Hunk errors
+
+```
+|10px [10foo(1)] 10px|
+
+(1) Unrecognzed unit type
+```
+
+### Param errors
+
+```
+|$*3|N[E(1)]
+
+(1) Unrecognized option
+```
+
+### Grid Errors
+```
+[|$*3NL10px(1)]
+
+(Improperly formatted grid)
+```
