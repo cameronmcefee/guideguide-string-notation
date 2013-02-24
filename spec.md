@@ -1,8 +1,8 @@
 # GuideGuide String Notation
 
 ```
-|<10px $*3 >10px|H100px
-|<10px $*3 >10px|V100px
+|<10px, $*3, >10px|H100px
+|<10px, $*3, >10px|V100px
 ```
 
 GuideGuide is awesome, but due to the fact that its values come from static inputs, users are provided a limited number of options as to how they can create grids. With the GuideGuide form it is not possible to create grids with arbitrary such as sidebars.
@@ -15,7 +15,7 @@ Users that only want the basic GuideGuide features will likely never know GGSN e
 
 > |\<hunks\>|\<options\>\<grid width\>
 
-A grid is a collection of cells (hunks) across a single dimentional plane. The format for a grid is bases loosely on that of regular expressions. A grid is a collection of hunk objects bookended by pipe `|` characters. It is possible to change the way GuideGuide renders the grid by specifiying options after the right most pipe character. A width for the grid can be specified as a single unit object to the right of the options. Each hunk declaration is separated by a space. Newlines are used to define multiple grids in one string.
+A grid is a collection of cells (hunks) across a single dimentional plane. The format for a grid is bases loosely on that of regular expressions. A grid is a collection of hunk objects bookended by pipe `|` characters. It is possible to change the way GuideGuide renders the grid by specifiying options after the right most pipe character. A width for the grid can be specified as a single unit object to the right of the options. Each hunk declaration is separated by a comma. Whitespace is ignored. Newlines are used to define multiple grids in one string.
 
 
 #### Examples
@@ -23,10 +23,10 @@ A grid is a collection of cells (hunks) across a single dimentional plane. The f
 - `|$*3|`  
   a three column grid
 
-- `|<10px 20px*3 >10px|HC100px`  
+- `|<10px, 20px*3, >10px|HC100px`  
   a one hundred pixel horizontal grid with a ten pixel left margin, ten pixel right margin, and three twenty pixel columns centered in the middle
 
-- `|10px 200px 10px $*5|`  
+- `|10px, 200px, 10px, $*5|`  
   a grid with a left side bar with 10px on either side, and a five columns filling the gap.
 
 
@@ -62,7 +62,7 @@ Arbitrary hunks are simple grid cells that are the width of the unit specified. 
 - `|10px*3|`  
   three ten pixel columns
 
-- `|.5in 1in .5in|`  
+- `|.5in, 1in, .5in|`  
   one half inch column, one inch column, one half inch column
 
 ### Margins
@@ -81,10 +81,10 @@ Margins are hunks that attach to the specified side of the grid area. While it's
 
 #### Examples
 
-- `|<10px >10px|`  
+- `|<10px, >10px|`  
   ten pixel left margin, ten pixel right margin
   
-- `|<10px*2 >10px >10px|`  
+- `|<10px*2, >10px, >10px|`  
   two ten pixel left margins, two ten pixel right margins
 
 ### Wildcards
@@ -95,7 +95,7 @@ A wildcard is a way to define variables within a grid. When specified in its sim
 
 #### Examples
 
-- `| $ $ $ |`  
+- `| $, $, $, |`  
   a three column grid
 
 - `| $*3 |`  
@@ -113,10 +113,10 @@ In cases where a user would like to define a repeating collection of hunks, a wi
 - `|${10px}*3|`  
   three columns that are 10 pixels wide
 
-- `|$ $G{20px} $ $G $|`  
+- `|$, $G{20px}, $, $G, $|`  
   three colums with twenty pixel gutters
   
-- `|$B{10px $ 10px} 20px $B 20px $B|`  
+- `|$B{10px $ 10px}, 20px, $B, 20px, $B|`  
   three columns, ten pixel column padding, and twenty pixel gutters 
 
 ## Grid Options
@@ -180,7 +180,7 @@ GuideGuide String Notation errors will be denoted in brackets. Directly followin
 ### Hunk errors
 
 ```
-|10px [10foo(1)] 10px|
+|10px, [10foo(1)], 10px|
 
 (1) Unrecognzed unit type
 ```
