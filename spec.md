@@ -17,16 +17,18 @@ Users that only want the basic GuideGuide features will likely never know GGSN e
 
 A grid is a collection of cells (hunks) across a single dimentional plane. The format for a grid is bases loosely on that of regular expressions. A grid is a collection of hunk objects bookended by pipe `|` characters. It is possible to change the way GuideGuide renders the grid by specifiying options after the right most pipe character. A width for the grid can be specified as a single unit object to the right of the options. Each hunk declaration is separated by a comma. Whitespace is ignored. Newlines are used to define multiple grids in one string.
 
+In cases where the user does not need to specify options for the grid, the pipes and options can be omitted.
+
 
 #### Examples
 
-- `|$*3|`  
-  a three column grid
+- `|$*3|V`  
+  a three row vertical grid
 
 - `|<10px, 20px*3, >10px|HC100px`  
   a one hundred pixel horizontal grid with a ten pixel left margin, ten pixel right margin, and three twenty pixel columns centered in the middle
 
-- `|10px, 200px, 10px, $*5|`  
+- `10px, 200px, 10px, $*5`  
   a grid with a left side bar with 10px on either side, and a five columns filling the gap.
 
 
