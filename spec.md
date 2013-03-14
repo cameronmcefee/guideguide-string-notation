@@ -61,7 +61,7 @@ Arbitrary hunks are simple grid cells that are the width of the unit specified. 
 
 #### Examples
 
-- `|10px*3|`  
+- `|10px, 10px, 10px|`  
   three ten pixel columns
 
 - `|.5in, 1in, .5in|`  
@@ -86,7 +86,7 @@ Margins are hunks that attach to the specified side of the grid area. While it's
 - `|<10px, >10px|`  
   ten pixel left margin, ten pixel right margin
   
-- `|<10px*2, >10px, >10px|`  
+- `|<10px, <10px, >10px, >10px|`  
   two ten pixel left margins, two ten pixel right margins
 
 ### Wildcards
@@ -97,11 +97,9 @@ A wildcard is a way to define variables within a grid. When specified in its sim
 
 #### Examples
 
-- `| $, $, $, |`  
+- `| $, $, $ |`  
   a three column grid
 
-- `| $*3 |`  
-  a three column grid
 
 In cases where a user would like to define a repeating collection of hunks, a wildcard combined with an id and curly brackets can be used. The wildcard's hunks should be declared in the first instance of the hunk. In cases where only a single wildcard of an id is declared, GuideGuide will attempt to repeat the wildcard as many consecutive times as will fit in the given area, after all other calculations are made.
 
@@ -112,14 +110,41 @@ In cases where a user would like to define a repeating collection of hunks, a wi
 - `|${100px}|`  
   as many one hundred pixel columns as will fit
 
-- `|${10px}*3|`  
-  three columns that are 10 pixels wide
-
 - `|$, $G{20px}, $, $G, $|`  
   three colums with twenty pixel gutters
   
 - `|$B{10px $ 10px}, 20px, $B, 20px, $B|`  
   three columns, ten pixel column padding, and twenty pixel gutters 
+
+### Multiples and fills
+
+Arbitray and wildcard hunks can accept a final modifier that determines how many of said hunk exist.
+
+#### Multiple
+
+A multiple is represented by an asterisk `*` followed by a number. The hunk will be recreated sequentially the number of times specified by the multiple
+
+- `|<10px*3|`  
+  Three ten pixel right margins
+
+- `|$*3|`  
+  A three column grid
+
+- `|$A{ $, 10px }*2, $|`
+  A three column grid with ten pixel gutters
+
+#### Fill
+
+A fill is represented by a plus `+` and is a hunk that will be recreated squentially until it fills the remaining space in the grid. This is useful for cases such as creating a baseline grid, or filling a space with as many columns and gutters of a width as will fit.
+
+- `|16px+|V`  
+  A sixteen pixel baseline grid
+
+- `|<100px, 16px+, >100px|V`  
+  A one hundred pixel header, a sixteen pixel baseline grid, and a one hundred pixel footer
+
+- `|${ 100px, 10px }+ 100px|H`  
+  As many one hundred pixel columns with 10 pixel gutters as will fit in the area given.
 
 ## Grid Options
 
