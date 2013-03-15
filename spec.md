@@ -135,15 +135,15 @@ A multiple is represented by an asterisk `*` followed by a number. The hunk will
 
 #### Fill
 
-A fill is represented by a plus `+` and is a hunk that will be recreated squentially until it fills the remaining space in the grid. This is useful for cases such as creating a baseline grid, or filling a space with as many columns and gutters of a width as will fit.
+A fill is represented by a asterisk `*` folowed by nothing and is a hunk that will be recreated squentially until it fills the remaining space in the grid. This is useful for cases such as creating a baseline grid, or filling a space with as many columns and gutters of a width as will fit.
 
-- `|16px+|V`  
+- `|16px*|V`  
   A sixteen pixel baseline grid
 
-- `|<100px, 16px+, >100px|V`  
+- `|<100px, 16px*, >100px|V`  
   A one hundred pixel header, a sixteen pixel baseline grid, and a one hundred pixel footer
 
-- `|${ 100px, 10px }+ 100px|H`  
+- `|${ 100px, 10px }* 100px|H`  
   As many one hundred pixel columns with 10 pixel gutters as will fit in the area given.
 
 ## Grid Options
