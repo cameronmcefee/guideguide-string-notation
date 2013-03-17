@@ -5,7 +5,7 @@
 |<10px, $*3, >10px|V100px
 ```
 
-GuideGuide is awesome, but due to the fact that its values come from static inputs, users are provided a limited number of options as to how they can create grids. With the GuideGuide form it is not possible to create grids with arbitrary such as sidebars.
+GuideGuide is awesome, but due to the fact that its values come from static inputs, users are provided a limited number of options as to how they can create grids. With the GuideGuide form it is not possible to create grids with arbitrary grids such as sidebars.
 
 This spec defines a written language called GuideGuide String Notation (GGSN) that can be used to "write" custom grids. GuideGuide itself will run using GGSN. The GuideGuide form will simply be a frontend that outputs GGSN to be parsed by the underlying logic.
 
