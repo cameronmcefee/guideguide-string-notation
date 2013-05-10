@@ -148,7 +148,7 @@ A fill is represented by a asterisk `*` folowed by nothing and is a hunk that wi
 
 ## Grid Options
 
-Optional values to modify how the grid is created. 
+Optional values to modify how the grid is created. Option values are case sensitive.
 
 ### Orientation
 
@@ -156,15 +156,15 @@ Determines the direction the grid will be rendered, whether horizontal or vertic
 
 #### Values:
 
-- `H` *(default)*  
+- `h` *(default)*  
   horizontal
 
-- `V`  
+- `v`  
   vertical
 
 ### Position
 
-Determines the position where GuideGuide renders the grid in cases where the grid specified does not fill the available area. GuideGuide factors this available area as the remainder of *area - margins*.
+Determines the position where GuideGuide renders the grid in cases where the grid specified does not fill the available area. GuideGuide factors this available area as the remainder of *area - margins*. Note the capital letters.
 
 #### Values:
 
@@ -177,16 +177,31 @@ Determines the position where GuideGuide renders the grid in cases where the gri
 - `L`  
   last
 
+### Remainder pixel distribution
+
+Determines to which columns GuideGuide adds remainder pixels when the columns do not divide equally into the total width of the grid area. Note the lowercase letters.
+
+#### Values:
+
+- `f`*(default)*  
+  first
+
+- `c`  
+  center
+
+- `l`  
+  last
+
 ### Calculation
 
 Determines whether GuideGuide is strict about integers when calculating pixels
 
 #### Values:
 
-- `N` *(default)*  
+- `n` *(default)*  
   normal
 
-- `P`  
+- `p`  
   pixel specific
 
 ### Grid width
