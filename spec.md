@@ -1,8 +1,8 @@
 # GuideGuide String Notation
 
 ```
-|<10px, $*3, >10px|H100px
-|<10px, $*3, >10px|V100px
+| 10px | ~ | 10px | ( H, 100px )
+| 10px | ~ | 10px | ( V, 100px )
 ```
 
 GuideGuide is awesome, but due to the fact that its values come from static inputs, users are provided a limited number of options as to how they can create grids. With the GuideGuide form it is not possible to create grids with arbitrary grids elements such as sidebars.
@@ -13,24 +13,46 @@ Users that only want the basic GuideGuide features will likely never know GGSN e
 
 ## Grid
 
-> |\<hunks\>|\<options\>\<grid width\>
+> \<hunks\> (\<options\>, \<grid width\>, \<grid offset\> )
 
-A grid is a collection of cells (hunks) across a single dimentional plane. The format for a grid is bases loosely on that of regular expressions. A grid is a collection of hunk objects bookended by pipe `|` characters. It is possible to change the way GuideGuide renders the grid by specifiying options after the right most pipe character. A width for the grid can be specified as a single unit object to the right of the options. Each hunk declaration is separated by a comma. Whitespace is ignored. Newlines are used to define multiple grids in one string.
+A grid is a collection of gaps and guides (hunks) across a single dimentional
+plane. GuideGuide will split the string into an array of hunks and iterate
+through them, following them like instructions. Starting at 0, for each gap
+hunk, GuideGuide will advance its insertion point by the value of the hunk.
+When the current hunk is a guide hunk, GuideGuide will place a guide at the
+current location of the insertion point. This will continue until all hunks
+have been parsed.
 
-In cases where the user does not need to specify options for the grid, the pipes and options can be omitted.
+GuideGuide will take into acount the size of the document or selection when
+procecing percentages, wildcards, and fills. GuideGuide will not take the
+document or selection into account when rendering the grid, therefore allowing
+guides to be placed outside of it.
+
+Each hunk is separated by a space character. Newlines are used to define
+multiple grids in one string.
+
+It is possible to change the way GuideGuide renders the grid by specifiying
+options after the right most pipe character. A width for the grid can be
+specified, as well as an offset to start rendering the grid. Whitespace in
+options is ignored.
 
 
 #### Examples
 
-- `|$*3|V`  
+- """
+  | ~ | (v)
+  | ~ | (h)
+  """  
+  a guide at the top, right, bottom, and left of the document.
+
+- `| ~ | ~ | ~ | ( v )`  
   a three row vertical grid
 
-- `|<10px, 20px*3, >10px|HC100px`  
-  a one hundred pixel horizontal grid with a ten pixel left margin, ten pixel right margin, and three twenty pixel columns centered in the middle
+- `| 10px | ~ | 20px | ~ | 10px| ( h, 100px`  
+  a one hundred pixel horizontal grid with a ten pixel left margin, ten pixel right margin, and a twenty pixel column centered in the middle
 
-- `10px, 200px, 10px, $*5`  
+- `| 10px | 200px | 10px | ~ | ~ | ~ |`  
   a grid with a left side bar with 10px on either side, and a five columns filling the gap.
-
 
 
 ## Unit objects
@@ -49,110 +71,111 @@ Unit objects are value-unit pairs that indicate a measurement.
 - `6pica`
 - `100%`
 
+---
+
 ## Hunks
 
 Hunks represent objects that define a cell or group of cells. An optional multiplier can be added to the end of the hunk to indicate that the hunk should be repated.
+
+### Guide Hunks
+
+> |
+
+Guide hunks are represented by a pipe `|`. These hunks tell GuideGuide to place a guide at the current insertion point.
 
 ### Arbitrary hunks
 
 > \<value\>\<unit\>*\<multiplier\>
 
-Arbitrary hunks are simple grid cells that are the width of the unit specified. Arbitrary hunks must have a positive value.
+Arbitrary hunks are simple gaps that are the width of the unit specified. Arbitrary can be positive or negative. Due to this, it is possible to traverse backwards and forwards 
 
 #### Examples
 
-- `|10px, 10px, 10px|`  
+- `| 10px | 10px | 10px|`  
   three ten pixel columns
 
-- `|.5in, 1in, .5in|`  
+- `| .5in | 1in | .5in|`  
   one half inch column, one inch column, one half inch column
-
-### Margins
-
-> \<side\>\<value\>\<unit\>*\<multiplier\>
-
-Margins are hunks that attach to the specified side of the grid area. While it's possible to delcare margins anywhere in the grid declaration, it's less confusing if they are declared on the side of the declaration that they represent. Margins are additive from the edge of the grid inward. For example a value such as `<10px <-10px` would result in only a ten pixel margin, as the second margin returns to 0. Negative values can be used to place the margins outside the grid area.
-
-#### Values:
-
-- `<`  
-  first margin (left/top)
-
-- `>`  
-  last margin (right/bottom)
-
-#### Examples
-
-- `|<10px, >10px|`  
-  ten pixel left margin, ten pixel right margin
-  
-- `|<10px, <10px, >10px, >10px|`  
-  two ten pixel left margins, two ten pixel right margins
 
 ### Wildcards
 
-> $\<id\>{\<hunks\>}\*\<multiplier\>
+> ~
 
-A wildcard is a way to define variables within a grid. When specified in its simplest form `$` the value remaing after all defined grid hunks have been applied to the grid area will be distributed evenly between the wildcards. If the grid is rendered as pixel specific, the value will be spread evently across the wildcards, with the remaining pixels being distributed amongst the grid based on GuideGuide's pixel remainder settings. Values must be positive.
-
-#### Examples
-
-- `| $, $, $ |`  
-  a three column grid
-
-
-In cases where a user would like to define a repeating collection of hunks, a wildcard combined with an id and curly brackets can be used. The wildcard's hunks should be declared in the first instance of the hunk. In cases where only a single wildcard of an id is declared, GuideGuide will attempt to repeat the wildcard as many consecutive times as will fit in the given area, after all other calculations are made.
-
-*Note:* I haven't yet figured out how to handle cases of multiple wildcard ids. This portion is still in flux.
+A wildcard hunk is represented by a tilde `~`. Any area within a grid that remains after all of the arbitrary hunks have been calculated will be evenly distributed between amongst the wildcards present in a grid.
 
 #### Examples
 
-- `|${100px}|`  
-  as many one hundred pixel columns as will fit
+- `| ~ |`  
+  A guide on the left and right side of the document or selection.
 
-- `|$, $G{20px}, $, $G, $|`  
-  three colums with twenty pixel gutters
-  
-- `|$B{10px $ 10px}, 20px, $B, 20px, $B|`  
-  three columns, ten pixel column padding, and twenty pixel gutters 
+- `| ~ | ~ | ~ |`  
+  A three column grid
+
+### Variables
+
+Variables allow you to define and reuse collections of hunks within a grid. Variables are composed of a definition and a call.
+
+#### Definition
+
+> $\<id\> = \<hunks\>
+
+A variable definition is represented by a dollar sign `$`, an optional id, an equals sign, and then a collection of hunks separated by spaces.
+
+#### Call
+
+> $\<id\>*\<multiplier\>
+
+A variable call is represented by a dollar sign `$`, an optional id, and an optional multiplier. Anywhere a variable call occurs GuideGuide will replace its contents with the contents of its variable definition. A variable must be defined before it is called.
+
+#### Example
+
+"""
+$ = ~ |
+| $*2
+"""
+
+expands to:
+
+"""
+| ~ | ~ | ~ |
+"""
+
+a three column grid
 
 ### Multiples and fills
 
-Arbitray and wildcard hunks can accept a final modifier that determines how many of said hunk exist.
+Arbitray, wildcard, and variable hunks can accept a final modifier that will duplicate that hunk the number of times specified. These are most helpful when used with variables, as it is possible to specify both gap and guide hunks together. Multiples and fills can be specified on gap hunks, but since the result of the mutiplied gap is not visible, their usefulness is rare.
 
 #### Multiple
 
 A multiple is represented by an asterisk `*` followed by a number. The hunk will be recreated sequentially the number of times specified by the multiple
 
-- `|<10px*3|`  
-  Three ten pixel right margins
+- `10px*3`  
+  Three ten pixel gaps
 
-- `|$*3|`  
-  A three column grid
-
-- `|$A{ $, 10px }*2, $|`
+- """
+  $ =  ~ | 10px |
+  | $*2 ~ |
+  """  
   A three column grid with ten pixel gutters
 
 #### Fill
 
-A fill is represented by a asterisk `*` folowed by nothing and is a hunk that will be recreated squentially until it fills the remaining space in the grid. This is useful for cases such as creating a baseline grid, or filling a space with as many columns and gutters of a width as will fit.
+A fill is represented by a asterisk `*` folowed by nothing and is a hunk that will be recreated squentially until it fills the remaining space in the grid. This is useful for cases such as creating a baseline grid, or filling a space with as many columns and gutters of a certain width as will fit.
 
-- `|16px*|V`  
+- """
+  $ = 16px |
+  | $* ( V )
+  """  
   A sixteen pixel baseline grid
-
-- `|<100px, 16px*, >100px|V`  
-  A one hundred pixel header, a sixteen pixel baseline grid, and a one hundred pixel footer
-
-- `|${ 100px, 10px }* 100px|H`  
-  As many one hundred pixel columns with 10 pixel gutters as will fit in the area given.
 
 ## Grid Options
 
-Optional values to modify how the grid is created. Option values are case sensitive.
+Optional values to modify how the grid is created.
 
 ### Orientation
 
-Determines the direction the grid will be rendered, whether horizontal or vertical.
+Determines the direction the grid will be rendered, whether horizontal or vertical. Orientation options are *not* case sensitve.
 
 #### Values:
 
@@ -162,20 +185,20 @@ Determines the direction the grid will be rendered, whether horizontal or vertic
 - `v`  
   vertical
 
-### Position
+### Origin
 
-Determines the position where GuideGuide renders the grid in cases where the grid specified does not fill the available area. GuideGuide factors this available area as the remainder of *area - margins*. Note the capital letters.
+Determines the position where GuideGuide renders the grid in cases where the grid specified is not as wide as the document or selection. Note the capital letters.
 
 #### Values:
 
 - `F`*(default)*  
-  first
+  first (left/top)
 
 - `C`  
   center
 
 - `L`  
-  last
+  last (right/bottom)
 
 ### Remainder pixel distribution
 
@@ -184,13 +207,13 @@ Determines to which columns GuideGuide adds remainder pixels when the columns do
 #### Values:
 
 - `f`*(default)*  
-  first
+  first (left/top)
 
 - `c`  
   center
 
 - `l`  
-  last
+  last (right/bottom)
 
 ### Calculation
 
@@ -206,38 +229,37 @@ Determines whether GuideGuide is strict about integers when calculating pixels
 
 ### Grid width
 
-A unit object that can specify the width of the grid area to be used for the calculation.
-Must be a positive value.
+Optional unit object that specifies the width of the grid area to be used for the calculation. Must be a positive value. The width option can be left blank.
 
 #### Examples:
 
-- `| $*3 |100px`  
+- `| ~ | ~ | ~ | ( h, 100px )`  
   A three column grid that is one hundred pixels wide.
+
+### Grid offset
+
+Optional unit object that specifies how far from the origin the grid will be offset. When the origin of a grid is set to `center` the offset property will be ignored.
+
+#### Examples
+
+- `| 10px | ( hF, , 50px )`  
+  A ten pixel column that sits 50px from the left side of the document/selection
+
+- `| 10px | ( hL, , 50px )`  
+  A ten pixel column that sits 50px from the right site of the doucment/selection
+
+- `| 10px | ( hL, 100px, 30px)`  
+  A ten pixel wide column that sits 30px from the right side of a 100px selection.
 
 ## Errors
 
-GuideGuide String Notation errors will be denoted in brackets. Directly following a bracketed error will be a set of parens containing a comma separated list of error IDs. Explanation of the errors will be printed below the grid.
+GuideGuide String Notation errors will be denoted in curly brackets. Directly following a bracketed error will be a set of brackets containing a comma separated list of error IDs. Explanation of the errors will be printed below the grid.
 
 
 ### Hunk errors
 
 ```
-|10px, [10foo(1)], 10px|
+| 10px | { 10foo [1]} | 10px|
 
-(1) Unrecognzed unit type
-```
-
-### Param errors
-
-```
-|$*3|N[E(1)]
-
-(1) Unrecognized option
-```
-
-### Grid Errors
-```
-[|$*3NL10px(1)]
-
-(Improperly formatted grid)
+# 1. Unrecognzed unit type
 ```
