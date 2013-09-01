@@ -39,10 +39,10 @@ options is ignored.
 
 #### Examples
 
-- """
+- ```
   | ~ | (v)
   | ~ | (h)
-  """  
+  ```  
   a guide at the top, right, bottom, and left of the document.
 
 - `| ~ | ~ | ~ | ( v )`  
@@ -129,16 +129,16 @@ A variable call is represented by a dollar sign `$`, an optional id, and an opti
 
 #### Example
 
-"""
+```
 $ = ~ |
 | $*2
-"""
+```
 
 expands to:
 
-"""
+```
 | ~ | ~ | ~ |
-"""
+```
 
 a three column grid
 
@@ -153,20 +153,20 @@ A multiple is represented by an asterisk `*` followed by a number. The hunk will
 - `10px*3`  
   Three ten pixel gaps
 
-- """
+- ```
   $ =  ~ | 10px |
   | $*2 ~ |
-  """  
+  ```  
   A three column grid with ten pixel gutters
 
 #### Fill
 
 A fill is represented by a asterisk `*` folowed by nothing and is a hunk that will be recreated squentially until it fills the remaining space in the grid. This is useful for cases such as creating a baseline grid, or filling a space with as many columns and gutters of a certain width as will fit.
 
-- """
+- ```
   $ = 16px |
   | $* ( V )
-  """  
+  ```  
   A sixteen pixel baseline grid
 
 ## Grid Options
